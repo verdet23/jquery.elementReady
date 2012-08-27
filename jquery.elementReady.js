@@ -85,8 +85,8 @@
     var nbChecks = null;
     var checklist = [];
 
-    $.elementReady = function(id, fn) {
-	    checklist.push({id: id, fn: fn});
+    $.elementReady = function(selector, fn) {
+	    checklist.push({selector: selector, fn: fn});
 	    if (!interval) {
 		    interval = setInterval(check, $.elementReady.interval_ms);
 	    }
@@ -103,13 +103,18 @@
     // Private function
     function check() {
 	    for (var i = checklist.length - 1; 0 <= i; --i) {
-		    var el = document.getElementById(checklist[i].id);
-		    if (el) {
-			    var fn = checklist[i].fn; // first remove from checklist, then call function
-			    checklist[i] = checklist[checklist.length - 1];
-			    checklist.pop();
-			    fn.apply(el, [$]);
-		    }
+		    var el = document.querySelectorAll(checklist[i].selector);
+
+            if (el.length) {
+                var fn = checklist[i].fn; // first remove from checklist, then call function
+
+                for (var c = el.length - 1; 0 <= c; --c) {
+                    checklist[i] = checklist[checklist.length - 1];
+                    checklist.pop();
+                    fn.apply(el[c], [$]);
+                }
+            }
+
             nbChecks--;
 	    }
 	    if (nbChecks === 0 || checklist.length === 0) {
