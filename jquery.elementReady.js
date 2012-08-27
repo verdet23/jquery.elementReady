@@ -107,10 +107,9 @@
 
             if (el.length) {
                 var fn = checklist[i].fn; // first remove from checklist, then call function
-
-                for (var c = el.length - 1; 0 <= c; --c) {
                     checklist[i] = checklist[checklist.length - 1];
                     checklist.pop();
+                for (var c = el.length - 1; 0 <= c; --c) {
                     fn.apply(el[c], [$]);
                 }
             }
